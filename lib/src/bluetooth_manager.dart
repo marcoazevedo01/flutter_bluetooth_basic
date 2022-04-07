@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
-
 import 'bluetooth_device.dart';
 
 /// A BluetoothManager.
@@ -91,7 +89,7 @@ class BluetoothManager {
         .takeUntil(Rx.merge(killStreams))
         .doOnDone(stopScan)
         .map((map) {
-      final device = BluetoothDevice.fromJson(Map<String, dynamic>.from(map));
+      final device = BluetoothDevice.fromJson(map);
       final List<BluetoothDevice>? list = _scanResults.value;
       int newIndex = -1;
       list!.asMap().forEach((index, e) {

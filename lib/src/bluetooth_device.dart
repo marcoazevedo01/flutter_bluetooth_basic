@@ -1,17 +1,38 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'dart:convert';
 
-part 'bluetooth_device.g.dart';
-
-@JsonSerializable(includeIfNull: false)
 class BluetoothDevice {
-  BluetoothDevice();
-
   String? name;
   String? address;
   int? type = 0;
   bool? connected = false;
+  
+  BluetoothDevice({
+    this.name,
+    this.address,
+    this.type,
+    this.connected,
+  });
 
-  factory BluetoothDevice.fromJson(Map<String, dynamic> json) =>
-      _$BluetoothDeviceFromJson(json);
-  Map<String, dynamic> toJson() => _$BluetoothDeviceToJson(this);
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'address': address,
+      'type': type,
+      'connected': connected,
+    };
+  }
+
+  factory BluetoothDevice.fromMap(Map<String, dynamic> map) {
+    return BluetoothDevice(
+      name: map['name'],
+      address: map['address'],
+      type: map['type']?.toInt(),
+      connected: map['connected'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory BluetoothDevice.fromJson(String source) =>
+      BluetoothDevice.fromMap(json.decode(source));
 }
