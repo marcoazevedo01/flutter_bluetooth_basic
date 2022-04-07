@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -31,14 +31,14 @@ class _MyHomePageState extends State<MyHomePage> {
   BluetoothManager bluetoothManager = BluetoothManager.instance;
 
   bool _connected = false;
-  BluetoothDevice _device;
+  late BluetoothDevice _device;
   String tips = 'no device connect';
 
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
+    WidgetsBinding.instance!.addPostFrameCallback((_) => initBluetooth());
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -129,9 +129,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 stream: bluetoothManager.scanResults,
                 initialData: [],
                 builder: (c, snapshot) => Column(
-                  children: snapshot.data
+                  children: snapshot.data!
                       .map((d) => ListTile(
-                            title: Text(d.name ?? ''),
+                            title: Text(d.name),
                             subtitle: Text(d.address),
                             onTap: () async {
                               setState(() {
@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               });
                             },
                             trailing:
-                                _device != null && _device.address == d.address
+                              _device.address == d.address
                                     ? Icon(
                                         Icons.check,
                                         color: Colors.green,
@@ -183,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
         stream: bluetoothManager.isScanning,
         initialData: false,
         builder: (c, snapshot) {
-          if (snapshot.data) {
+          if (snapshot.data != null) {
             return FloatingActionButton(
               child: Icon(Icons.stop),
               onPressed: () => bluetoothManager.stopScan(),
